@@ -1,0 +1,82 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'eclipse'
+    id 'com.github.mrcjkb.module-finder' version '0.0.7'
+}
+
+repositories {
+    mavenCentral()
+}
+
+group = "${APPLICATION_GROUP}"
+version = "${APPLICATION_VERSION}"
+
+def vertxVersion = '4.3.0'
+
+dependencies {
+    implementation "io.vertx:vertx-core:${vertxVersion}"
+    implementation "io.vertx:vertx-web:${vertxVersion}"
+    implementation "io.vertx:vertx-web-client:${vertxVersion}"
+    implementation "io.vertx:vertx-web-openapi:${vertxVersion}"
+    implementation "io.vertx:vertx-web-api-service:${vertxVersion}"
+    implementation "io.vertx:vertx-auth-common:${vertxVersion}"
+    implementation "io.vertx:vertx-auth-properties:${vertxVersion}"
+    implementation "io.vertx:vertx-codegen:${vertxVersion}"
+    implementation "io.vertx:vertx-service-proxy:${vertxVersion}"
+    annotationProcessor "io.vertx:vertx-codegen:${vertxVersion}:processor"
+    annotationProcessor "io.vertx:vertx-web-api-service:${vertxVersion}"
+
+    implementation 'org.apache.httpcomponents:httpcore:4.4.15'
+
+    //logging
+    implementation "org.slf4j:slf4j-api:1.7.36"
+    runtimeOnly "org.apache.logging.log4j:log4j-core:2.18.0"
+    runtimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:2.18.0"
+
+    //jUnit 5 libs
+    testImplementation "io.vertx:vertx-unit:${vertxVersion}"
+    testImplementation "io.vertx:vertx-junit5:${vertxVersion}"
+    testRuntimeOnly "io.vertx:vertx-rx-java:${vertxVersion}"
+    testRuntimeOnly "io.vertx:vertx-rx-java2:${vertxVersion}"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.6.1'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.incremental = true
+    options.release = 16
+}
+
+// not working, spotless failes
+tasks.withType(JavaExec) {
+    options.jvmArgs += [
+            '--add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+            '--add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED',
+            '--add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED',
+            '--add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+            '--add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED'
+    ]
+}
+
+java {
+    modularity.inferModulePath = true
+
+    withSourcesJar()
+}
+
+jar {
+    manifest {
+        attributes('Implementation-Title': "${APPLICATION_NAME}",
+                'Implementation-Version': "${APPLICATION_VERSION}")
+    }
+}
+
+def jarFileName = "${APPLICATION_NAME}-${APPLICATION_VERSION}.jar"
+
+test {
+    useJUnitPlatform()
+}

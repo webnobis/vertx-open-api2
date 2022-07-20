@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN"
+               packages="com.webnobis">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.webnobis" level="DEBUG"
+                additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="io.vertx" level="INFO" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="io.netty" level="WARN" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="ERROR">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>

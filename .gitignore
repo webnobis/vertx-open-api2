@@ -1,0 +1,12 @@
+.gradle
+bin/
+build/
+.settings
+.project
+.classpath
+.git
+file-uploads/
+.vertx/
+.idea
+.iml
+/vertx-open-api.iml

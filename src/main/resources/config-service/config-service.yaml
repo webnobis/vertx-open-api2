@@ -1,0 +1,134 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Adapter Config Service
+  license:
+    name: WebNobis
+
+paths:
+  /config/v1/update:
+    get:
+      summary: Prepare update a config
+      operationId: getConfigForm
+      tags:
+        - config_api
+      x-vertx-event-bus: config_api.config_service
+      responses:
+        '200':
+          description: Update form
+          content:
+            text/html:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+    post:
+      summary: Update a config
+      operationId: setConfig
+      tags:
+        - config_api
+      x-vertx-event-bus: config_api.config_service
+      requestBody:
+        required: true
+        description: The config to update
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Update"
+      responses:
+        '200':
+          description: Updated
+          content:
+            text/plain:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+  /config/v1/workaround:
+    get:
+      summary: Prepare update a config
+      operationId: getConfigFormSame
+      tags:
+        - config_api
+      x-vertx-event-bus: config_api.config_service
+      responses:
+        '200':
+          description: Update form
+          content:
+            text/html:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+    post:
+      summary: Update a config
+      operationId: setConfigBody
+      tags:
+        - config_api
+      x-vertx-event-bus: config_api.config_service
+      requestBody:
+        required: true
+        description: The config to update
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Update"
+      responses:
+        '200':
+          description: Updated
+          content:
+            text/plain:
+              schema:
+                type: string
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorModel"
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Update:
+      type: object
+      required:
+        - id
+        - content
+        - charset
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        charset:
+          type: string
+    ErrorModel:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: integer
+          minimum: 100
+          maximum: 600
+        message:
+          type: string
+
+security:
+  - basicAuth: [ ]
